@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>顔型診断 | あなただけの美しさを知ろう</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #c9973a;
+      --gold-light: #e8c97a;
+      --rose: #d4748c;
+      --rose-light: #f0b4c4;
+      --cream: #fdf8f2;
+      --dark: #2c2018;
+      --gray: #7a6e66;
+    }
+
+    body {
+      font-family: 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    /* ========== HEADER ========== */
+    .hero {
+      background: linear-gradient(160deg, #2c1a2e 0%, #4a2040 50%, #2c1a2e 100%);
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,151,58,0.25) 0%, transparent 70%);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      border: 1px solid rgba(201,151,58,0.6);
+      color: var(--gold-light);
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      padding: 5px 16px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: 1.7rem;
+      color: #fff;
+      letter-spacing: 4px;
+      margin-bottom: 10px;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    /* ========== CONTAINER ========== */
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    /* ========== CARD ========== */
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 30px 24px;
+      box-shadow: 0 8px 40px rgba(44,24,46,0.08);
+      margin-bottom: 16px;
+    }
+
+    .card-tag {
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      color: var(--gold);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--dark);
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .card-sub {
+      font-size: 0.82rem;
+      color: var(--gray);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    /* ========== HOW TO MEASURE ========== */
+    .measure-guide {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .measure-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--cream);
+      border: 1.5px solid #f0e8dc;
+    }
+
+    .measure-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .measure-body {}
+
+    .measure-name {
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+
+    .measure-desc {
+      font-size: 0.76rem;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+
+    /* Face diagram */
+    .face-diagram {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 20px;
+      background: linear-gradient(135deg, #fdf2f8, #fdf8f2);
+      border-radius: 16px;
+    }
+
+    .face-svg-wrap { display: inline-block; position: relative; }
+
+    .face-diagram svg { width: 160px; height: 200px; }
+
+    /* ========== INPUT FORM ========== */
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .input-group { display: flex; flex-direction: column; gap: 6px; }
+
+    .input-label {
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--gray);
+      letter-spacing: 1px;
+    }
+
+    .input-label span {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #fff;
+      font-size: 0.65rem;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 18px;
+      margin-right: 4px;
+    }
+
+    .input-field-wrap {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid #e8ddd5;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+      background: #fff;
+    }
+
+    .input-field-wrap:focus-within { border-color: var(--gold); }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 8px 12px 14px;
+      border: none;
+      outline: none;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--dark);
+      background: transparent;
+    }
+
+    .input-unit {
+      padding: 0 12px 0 0;
+      font-size: 0.75rem;
+      color: var(--gray);
+      flex-shrink: 0;
+    }
+
+    .diagnose-btn {
+      width: 100%;
+      padding: 18px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #4a2040, #7a3060, #4a2040);
+      background-size: 200% 100%;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .diagnose-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+
+    .diagnose-btn:hover::after { transform: translateX(100%); }
+    .diagnose-btn:hover { opacity: 0.92; }
+    .diagnose-btn:active { transform: scale(0.98); }
+
+    .error-msg {
+      color: #c0556a;
+      font-size: 0.82rem;
+      margin-top: 10px;
+      min-height: 20px;
+      text-align: center;
+    }
+
+    /* ========== RESULT ========== */
+    #result-section { display: none; }
+    #result-section.show { display: block; animation: fadeUp 0.5s ease; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-hero {
+      background: linear-gradient(160deg, #2c1a2e, #4a2040);
+      border-radius: 24px;
+      padding: 36px 24px;
+      text-align: center;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,151,58,0.3) 0%, transparent 70%);
+    }
+
+    .result-sparkle {
+      font-size: 2rem;
+      margin-bottom: 4px;
+      position: relative;
+    }
+
+    .result-face-label {
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      color: var(--gold-light);
+      margin-bottom: 6px;
+      position: relative;
+    }
+
+    .result-face-name {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 4px;
+      position: relative;
+    }
+
+    .result-face-en {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 4px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .result-copy {
+      font-size: 1rem;
+      color: var(--gold-light);
+      font-weight: bold;
+      line-height: 1.6;
+      position: relative;
+      padding: 12px 16px;
+      border: 1px solid rgba(201,151,58,0.3);
+      border-radius: 12px;
+      background: rgba(201,151,58,0.08);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .section-head-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    .section-head-text {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--gold);
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      background: linear-gradient(135deg, #fdf8f2, #fff);
+      border-radius: 14px;
+      border: 1px solid #f0e8dc;
+    }
+
+    .feature-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+
+    .feature-name {
+      font-size: 0.92rem;
+      font-weight: bold;
+      color: var(--dark);
+      margin-bottom: 3px;
+    }
+
+    .feature-desc {
+      font-size: 0.78rem;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    .style-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .style-item {
+      padding: 16px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #fdf2f8, #fdf8f2);
+      border: 1px solid #f0dce8;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .style-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--rose), var(--gold));
+    }
+
+    .style-name {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .style-desc {
+      font-size: 0.78rem;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    .ng-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ng-tag {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      background: #fff0f3;
+      color: #c0556a;
+      border: 1px solid #f0c0cc;
+    }
+
+    .message-box {
+      background: linear-gradient(135deg, #2c1a2e, #4a2040);
+      border-radius: 16px;
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .message-box::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      left: 16px;
+      font-size: 6rem;
+      color: rgba(201,151,58,0.15);
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+
+    .message-text {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.9;
+      position: relative;
+    }
+
+    .message-sign {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: var(--gold-light);
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    .retry-btn {
+      width: 100%;
+      padding: 16px;
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      background: transparent;
+      color: var(--gold);
+      font-size: 0.9rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .retry-btn:hover {
+      background: var(--gold);
+      color: #fff;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">FACE TYPE DIAGNOSIS</div>
+  <h1>あなただけの<br><span>美しさを知ろう</span></h1>
+  <p>4つの数値から、あなたの顔型と<br>最もよく似合うスタイルをご提案します</p>
+</div>
+
+<div class="container">
+
+  <!-- INPUT SECTION -->
+  <div id="input-section">
+
+    <!-- How to measure -->
+    <div class="card">
+      <div class="card-tag">STEP 01 ― 測り方</div>
+      <div class="card-title">4か所を測ってみてください</div>
+      <div class="card-sub">定規やメジャーを使って、できるだけ正確に測るとより精度が上がります。目安は±2mmで大丈夫です。</div>
+
+      <!-- Face diagram -->
+      <div class="face-diagram">
+        <svg viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Face outline -->
+          <ellipse cx="80" cy="110" rx="54" ry="70" fill="#fdeef4" stroke="#e8c0d0" stroke-width="1.5"/>
+          <!-- Hair line -->
+          <path d="M 34 85 Q 80 50 126 85" stroke="#c9973a" stroke-width="1.5" stroke-dasharray="4,3" fill="none"/>
+          <!-- Measurement lines -->
+          <!-- ① Forehead -->
+          <line x1="45" y1="75" x2="115" y2="75" stroke="#c9973a" stroke-width="1.5"/>
+          <line x1="45" y1="70" x2="45" y2="80" stroke="#c9973a" stroke-width="1.5"/>
+          <line x1="115" y1="70" x2="115" y2="80" stroke="#c9973a" stroke-width="1.5"/>
+          <text x="80" y="68" text-anchor="middle" font-size="9" fill="#c9973a" font-weight="bold">①額の横幅</text>
+          <!-- ② Cheekbone -->
+          <line x1="28" y1="110" x2="132" y2="110" stroke="#d4748c" stroke-width="1.5"/>
+          <line x1="28" y1="105" x2="28" y2="115" stroke="#d4748c" stroke-width="1.5"/>
+          <line x1="132" y1="105" x2="132" y2="115" stroke="#d4748c" stroke-width="1.5"/>
+          <text x="80" y="108" text-anchor="middle" font-size="9" fill="#d4748c" font-weight="bold">②頬骨の横幅</text>
+          <!-- ③ Jaw -->
+          <line x1="46" y1="148" x2="114" y2="148" stroke="#7a5090" stroke-width="1.5"/>
+          <line x1="46" y1="143" x2="46" y2="153" stroke="#7a5090" stroke-width="1.5"/>
+          <line x1="114" y1="143" x2="114" y2="153" stroke="#7a5090" stroke-width="1.5"/>
+          <text x="80" y="162" text-anchor="middle" font-size="9" fill="#7a5090" font-weight="bold">③エラの横幅</text>
+          <!-- ④ Face length (vertical) -->
+          <line x1="148" y1="55" x2="148" y2="178" stroke="#4a9080" stroke-width="1.5"/>
+          <line x1="143" y1="55" x2="153" y2="55" stroke="#4a9080" stroke-width="1.5"/>
+          <line x1="143" y1="178" x2="153" y2="178" stroke="#4a9080" stroke-width="1.5"/>
+          <text x="148" y="118" text-anchor="middle" font-size="8" fill="#4a9080" font-weight="bold" transform="rotate(90,148,118)">④縦の長さ</text>
+          <!-- Eyes -->
+          <ellipse cx="62" cy="100" rx="8" ry="5" fill="#f8e0ea" stroke="#e8b0c8" stroke-width="1"/>
+          <ellipse cx="98" cy="100" rx="8" ry="5" fill="#f8e0ea" stroke="#e8b0c8" stroke-width="1"/>
+          <!-- Nose -->
+          <path d="M 80 110 Q 75 122 78 126 Q 80 128 82 126 Q 85 122 80 110" fill="#f0d8e4" stroke="#e0b8cc" stroke-width="0.8"/>
+          <!-- Mouth -->
+          <path d="M 70 140 Q 80 147 90 140" stroke="#e8a0b8" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="measure-guide">
+        <div class="measure-item">
+          <div class="measure-num">①</div>
+          <div class="measure-body">
+            <div class="measure-name" style="color:#c9973a">額の横幅</div>
+            <div class="measure-desc">生え際の、左右の一番外側の点を結んだ幅</div>
+          </div>
+        </div>
+        <div class="measure-item">
+          <div class="measure-num" style="background:linear-gradient(135deg,#d4748c,#f0b4c4)">②</div>
+          <div class="measure-body">
+            <div class="measure-name" style="color:#d4748c">頬骨の横幅</div>
+            <div class="measure-desc">目の下あたり、顔で一番横に張っている幅</div>
+          </div>
+        </div>
+        <div class="measure-item">
+          <div class="measure-num" style="background:linear-gradient(135deg,#7a5090,#b090d0)">③</div>
+          <div class="measure-body">
+            <div class="measure-name" style="color:#7a5090">エラの横幅</div>
+            <div class="measure-desc">あごの骨の一番出っ張っている部分の幅</div>
+          </div>
+        </div>
+        <div class="measure-item">
+          <div class="measure-num" style="background:linear-gradient(135deg,#4a9080,#80c0b0)">④</div>
+          <div class="measure-body">
+            <div class="measure-name" style="color:#4a9080">顔の縦の長さ</div>
+            <div class="measure-desc">生え際のてっぺんから、あごの先端まで</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input form -->
+    <div class="card">
+      <div class="card-tag">STEP 02 ― 数値を入力</div>
+      <div class="card-title">測った数値を入れてください</div>
+      <div class="card-sub">単位はセンチメートル（cm）です。小数点も入力できます（例：13.5）</div>
+
+      <div class="input-grid">
+        <div class="input-group">
+          <div class="input-label"><span>①</span>額の横幅</div>
+          <div class="input-field-wrap">
+            <input class="input-field" type="number" id="f1" placeholder="13" step="0.1" min="5" max="30">
+            <span class="input-unit">cm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-label"><span style="background:linear-gradient(135deg,#d4748c,#f0b4c4)">②</span>頬骨の横幅</div>
+          <div class="input-field-wrap">
+            <input class="input-field" type="number" id="f2" placeholder="14" step="0.1" min="5" max="30">
+            <span class="input-unit">cm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-label"><span style="background:linear-gradient(135deg,#7a5090,#b090d0)">③</span>エラの横幅</div>
+          <div class="input-field-wrap">
+            <input class="input-field" type="number" id="f3" placeholder="11" step="0.1" min="5" max="30">
+            <span class="input-unit">cm</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="input-label"><span style="background:linear-gradient(135deg,#4a9080,#80c0b0)">④</span>顔の縦の長さ</div>
+          <div class="input-field-wrap">
+            <input class="input-field" type="number" id="f4" placeholder="20" step="0.1" min="10" max="40">
+            <span class="input-unit">cm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="error-msg" id="error-msg"></div>
+      <button class="diagnose-btn" id="diagnose-btn">✨ 診断する</button>
+    </div>
+
+  </div><!-- /input-section -->
+
+  <!-- RESULT SECTION -->
+  <div id="result-section">
+
+    <!-- Result hero -->
+    <div class="result-hero" id="r-hero">
+      <div class="result-sparkle" id="r-sparkle">✨</div>
+      <div class="result-face-label">あなたの顔型は</div>
+      <div class="result-face-name" id="r-name"></div>
+      <div class="result-face-en" id="r-en"></div>
+      <div class="result-copy" id="r-copy"></div>
+    </div>
+
+    <!-- Features -->
+    <div class="card">
+      <div class="section-head">
+        <div class="section-head-text">あなたの魅力</div>
+        <div class="section-head-line"></div>
+      </div>
+      <div class="feature-list" id="r-features"></div>
+    </div>
+
+    <!-- Recommended styles -->
+    <div class="card">
+      <div class="section-head">
+        <div class="section-head-text">おすすめスタイル</div>
+        <div class="section-head-line"></div>
+      </div>
+      <div class="style-list" id="r-styles"></div>
+    </div>
+
+    <!-- NG styles -->
+    <div class="card">
+      <div class="section-head">
+        <div class="section-head-text">避けた方が良いスタイル</div>
+        <div class="section-head-line"></div>
+      </div>
+      <div class="ng-wrap" id="r-ng"></div>
+    </div>
+
+    <!-- Message from stylist -->
+    <div class="card">
+      <div class="section-head">
+        <div class="section-head-text">スタイリストより</div>
+        <div class="section-head-line"></div>
+      </div>
+      <div class="message-box">
+        <div class="message-text" id="r-message"></div>
+        <div class="message-sign">— あなたの担当スタイリストより ✂</div>
+      </div>
+    </div>
+
+    <button class="retry-btn" id="retry-btn">もう一度診断する</button>
+
+  </div><!-- /result-section -->
+
+</div>
+
+<script>
+  const data = {
+    oval: {
+      name: "卵型", en: "OVAL",
+      sparkle: "🥚✨",
+      copy: "すべてが整った、\n最もバランスの美しい顔型です",
+      features: [
+        { icon: "💎", name: "どんなスタイルも似合う万能顔型", desc: "額・頬・あごのバランスが黄金比に近く、ヘアスタイルを選ばない最も恵まれた顔型です" },
+        { icon: "🌸", name: "上品で洗練された印象", desc: "顔全体に自然なカーブがあり、どこから見ても美しいシルエットを持っています" },
+        { icon: "✨", name: "年齢を超えた普遍的な美しさ", desc: "時代やトレンドに関係なく、美しいとされる顔型の基準として世界中で愛されています" },
+      ],
+      styles: [
+        { name: "センターパート×ストレートロング", desc: "顔の美しいシルエットをそのまま活かせる、最もシンプルで洗練されたスタイル" },
+        { name: "ゆるふわパーマ×ミディアム", desc: "柔らかい印象をさらに引き立て、女性らしさが際立ちます" },
+        { name: "ショートボブ", desc: "顔のバランスの良さが最も伝わる、クールでスタイリッシュな定番スタイル" },
+        { name: "ハーフアップ", desc: "卵型の美しい輪郭をしっかり見せながら、清楚でエレガントな印象に" },
+      ],
+      ng: ["特に制限なし（ほぼすべてのスタイルが似合います）"],
+      message: "卵型は世界中のスタイリストが「理想の顔型」と認める、とても美しいバランスをお持ちです。\n\nどんなスタイルにも挑戦できるのがあなたの大きな武器。ぜひ色々なスタイルを楽しんでください。あなたの美しさには、限界がありません。",
+    },
+    round: {
+      name: "丸型", en: "ROUND",
+      sparkle: "🌕✨",
+      copy: "愛らしさと優しさが溢れる、\n人を惹きつける温かみのある顔型",
+      features: [
+        { icon: "🌸", name: "誰からも愛される愛らしい印象", desc: "丸みのある輪郭は、親しみやすさと温かさを自然に醸し出します。初対面の人にも好印象を与える顔型です" },
+        { icon: "💫", name: "年齢より若く見える美しさ", desc: "丸みのある顔型は年齢とともにその価値が増します。若々しい印象が長く続くのはこの顔型の特権です" },
+        { icon: "🌺", name: "柔らかく女性らしい雰囲気", desc: "シャープさよりも優しさが伝わる顔型で、自然と周りを癒す雰囲気をお持ちです" },
+      ],
+      styles: [
+        { name: "センターパート×縦長シルエット", desc: "縦のラインを強調して、スタイリッシュな印象に。顔を小さく見せる効果も抜群" },
+        { name: "ハイレイヤー×ロング", desc: "頭頂部にボリュームを出して縦長を演出。スレンダーな印象が生まれます" },
+        { name: "前髪なしのシンプルスタイル", desc: "おでこを出すことで縦のラインが強調され、すっきりした印象になります" },
+        { name: "毛先のみポイントパーマ", desc: "横への広がりを抑えながら、動きと女性らしさを演出する上品なスタイル" },
+      ],
+      ng: ["横に広がるふわふわパーム", "耳の高さでのワンレンボブ", "ショートすぎるスタイル"],
+      message: "丸型の方は、その愛らしさが最大の魅力です。「かわいい」と言われることが多いのではないでしょうか？\n\nスタイルで縦のラインを意識するだけで、スタイリッシュさと愛らしさを両立できます。あなたの持つ温かみのある雰囲気は、どんな顔型にも真似できない特別なものです。",
+    },
+    square: {
+      name: "四角型", en: "SQUARE",
+      sparkle: "💠✨",
+      copy: "芯の強さと知性を感じさせる、\n存在感抜群のかっこいい顔型",
+      features: [
+        { icon: "💪", name: "圧倒的な存在感と堂々とした美しさ", desc: "エラのはっきりしたラインは、自信と強さを自然に表現します。人目を引く華がある顔型です" },
+        { icon: "🧠", name: "知的でクールな印象", desc: "シャープな輪郭は、デキる女性・芯のある女性というイメージを与えます。ビジネスシーンでも頼もしく映ります" },
+        { icon: "🎭", name: "ショートヘアが最も映える顔型", desc: "四角型はショートスタイルを最もかっこよく着こなせる顔型のひとつ。多くの人が羨む骨格です" },
+      ],
+      styles: [
+        { name: "ウェーブ・パーマスタイル", desc: "柔らかい曲線がエラの直線を優しく和らげ、女性らしさをプラスします" },
+        { name: "サイドバング×ミディアム", desc: "エラを自然にカバーしながら、洗練された印象を作れます" },
+        { name: "レイヤードロング", desc: "毛先の動きでエラ周りが目立ちにくくなり、スタイリッシュな縦ラインが生まれます" },
+        { name: "外ハネボブ", desc: "毛先を外側に向けることでエラより下に視線が集まり、バランスよく見えます" },
+      ],
+      ng: ["ストレートのショートボブ（エラが強調される）", "タイトなまとめ髪", "ヘルメット型のシルエット"],
+      message: "四角型の方が持つ骨格の美しさは、モデルや女優さんにも多い、本当に魅力的な顔型です。\n\nエラのラインをコンプレックスに感じる方もいらっしゃいますが、それこそがあなたの個性と強みです。スタイル次第で、誰よりもかっこよく、誰よりも洗練された雰囲気を演出できます。",
+    },
+    heart: {
+      name: "ハート型", en: "HEART",
+      sparkle: "💖✨",
+      copy: "上品さとエレガンスを兼ね備えた、\n憧れの小顔美人顔型",
+      features: [
+        { icon: "👑", name: "自然な小顔に見える憧れの骨格", desc: "あごが細くシャープなため、自然と小顔に見えます。これは多くの人が望む、努力では手に入らない天然の美しさです" },
+        { icon: "💖", name: "エレガントで女性らしい印象", desc: "逆三角形の輪郭は、ドラマのヒロインや雑誌モデルに多い、洗練された顔型です" },
+        { icon: "✨", name: "あごのラインが際立つ横顔美人", desc: "横から見たときのあごから首にかけてのラインが非常に美しく、横顔が映えます" },
+      ],
+      styles: [
+        { name: "あごラインのボブ", desc: "あご周りにボリュームが生まれ、上下のバランスが整います。最も似合うスタイルのひとつ" },
+        { name: "ミディアムウェーブ", desc: "あご下に自然なふくらみが生まれ、ハート型の繊細なあごラインを優しく見せます" },
+        { name: "サイドバングあり×ミディアム", desc: "広い額を自然にカバーしながら、横顔の美しいラインを引き立てます" },
+        { name: "くびれシルエット（耳下でくびれる形）", desc: "頬からあごにかけて内側に入るシルエットで、顔全体のバランスが整います" },
+      ],
+      ng: ["トップにボリュームのあるスタイル（おでこが広く見える）", "センターパート×ピタッとしたストレート"],
+      message: "ハート型は、多くの人が理想とする「小顔」を天然で持っている、とても羨ましい顔型です。\n\nあごの細さと顔全体のシャープさは、あなたにしかない特別な魅力。前髪やバングを上手に使うことで、さらに洗練された印象になります。あなたの美しさをもっと好きになってください。",
+    },
+    long: {
+      name: "面長型", en: "OBLONG",
+      sparkle: "🌟✨",
+      copy: "大人っぽく洗練された、\nモデル体型に多い憧れの顔型",
+      features: [
+        { icon: "👗", name: "モデル・女優に最も多い顔型", desc: "面長は雑誌モデルやファッションショーのモデルに多い顔型です。それほど洗練された美しさを持っています" },
+        { icon: "🎨", name: "大人っぽくクールな雰囲気", desc: "縦に長いシルエットは、知性と落ち着きのある大人の雰囲気を自然に演出します" },
+        { icon: "✂", name: "ショートスタイルが圧倒的に映える", desc: "面長型はショートカットをすると顔のバランスが整い、他の顔型より圧倒的にかっこよく決まります" },
+      ],
+      styles: [
+        { name: "前下がりボブ×バング", desc: "前髪を作ることで縦の長さが視覚的に短縮され、全体のバランスが整います" },
+        { name: "眉上バング×ショート", desc: "面長型が最も変わる魔法のスタイル。バング一つで印象が大きく変わります" },
+        { name: "横広がりウェーブパーマ", desc: "横にボリュームを出すことで縦の長さが和らぎ、丸みのある可愛らしい印象に" },
+        { name: "ふわふわパーマ（全体的）", desc: "ボリューム感のあるパーマで、顔周りに横の広がりが生まれてバランスが整います" },
+      ],
+      ng: ["縦に長いストレートロング（面長が強調）", "センターパート×ストレート", "頭頂部のみボリュームアップ"],
+      message: "面長型は、ファッション業界で最も求められる顔型のひとつです。スタイリッシュで大人っぽく、洋服もヘアスタイルも上品に着こなせます。\n\n前髪を作るだけで印象が劇的に変わるので、いつもと違う自分に出会いたいときはぜひチャレンジしてみてください。あなたの持つ洗練された美しさを、一緒に引き出しましょう。",
+    },
+    diamond: {
+      name: "ダイヤモンド型", en: "DIAMOND",
+      sparkle: "💎✨",
+      copy: "頬骨の高さが際立つ、\nエキゾチックで印象的な顔型",
+      features: [
+        { icon: "💎", name: "頬骨の高さが生む立体的な美しさ", desc: "高い頬骨は、光が当たったときに美しい陰影を作ります。写真映えする顔型として知られています" },
+        { icon: "🌏", name: "エキゾチックで個性的な魅力", desc: "ダイヤモンド型は他の顔型にはない独特の存在感があり、一度見たら忘れられない印象を与えます" },
+        { icon: "📸", name: "写真映え・カメラ映えする顔型", desc: "頬骨の高さが陰影を生み、写真やライトの下で特に美しく映えます" },
+      ],
+      styles: [
+        { name: "サイドバング×ミディアム", desc: "広い頬骨周りをサイドの髪でカバーしながら、縦のラインを作れます" },
+        { name: "顔周りレイヤー×ロング", desc: "顔周りに動きをつけることで頬骨の張りが和らぎ、柔らかい印象になります" },
+        { name: "外ハネミディアム", desc: "毛先を外にはねさせることで、視線が下に集まりバランスよく見えます" },
+        { name: "ウェーブスタイル", desc: "柔らかい曲線が頬骨のシャープさを上手に和らげ、女性らしい印象に" },
+      ],
+      ng: ["耳かけスタイル（頬骨が強調される）", "タイトなまとめ髪", "ストレートのタイトシルエット"],
+      message: "ダイヤモンド型の頬骨の高さは、世界中のモデルが憧れる特徴です。特に撮影や舞台照明の下では、その存在感が際立ちます。\n\n個性的な美しさをお持ちなので、スタイル次第でどんな雰囲気にも変化できます。あなただけの特別な顔立ちを、ぜひ誇りに思ってください。",
+    },
+  };
+
+  function calcType(a, b, c, d) {
+    // Ratios relative to cheekbone (widest reference)
+    const ar = a / b; // forehead ratio
+    const cr = c / b; // jaw ratio
+    const dr = d / b; // length ratio
+
+    // Long face
+    if (dr > 1.65) return "long";
+    // Round face
+    if (dr < 1.3 && ar > 0.8 && cr > 0.75) return "round";
+    // Heart face: wide forehead, narrow jaw
+    if (ar > cr + 0.12 && cr < 0.85) return "heart";
+    // Square face: wide jaw
+    if (cr > 0.88 && ar > 0.82) return "square";
+    // Diamond: cheekbone clearly widest, both forehead and jaw narrow
+    if (ar < 0.85 && cr < 0.82) return "diamond";
+    // Default oval
+    return "oval";
+  }
+
+  document.getElementById("diagnose-btn").addEventListener("click", () => {
+    const a = parseFloat(document.getElementById("f1").value);
+    const b = parseFloat(document.getElementById("f2").value);
+    const c = parseFloat(document.getElementById("f3").value);
+    const d = parseFloat(document.getElementById("f4").value);
+    const err = document.getElementById("error-msg");
+
+    if ([a,b,c,d].some(isNaN) || [a,b,c,d].some(v => v <= 0)) {
+      err.textContent = "⚠ 4つすべての数値を入力してください";
+      return;
+    }
+    if (a > 30 || b > 30 || c > 30 || d > 40) {
+      err.textContent = "⚠ 数値が大きすぎます。センチメートル（cm）で入力してください";
+      return;
+    }
+    err.textContent = "";
+
+    const type = calcType(a, b, c, d);
+    const r = data[type];
+
+    document.getElementById("r-sparkle").textContent = r.sparkle;
+    document.getElementById("r-name").textContent    = r.name;
+    document.getElementById("r-en").textContent      = r.en;
+    document.getElementById("r-copy").textContent    = r.copy;
+
+    const featEl = document.getElementById("r-features");
+    featEl.innerHTML = "";
+    r.features.forEach(f => {
+      featEl.innerHTML += `
+        <div class="feature-item">
+          <div class="feature-icon">${f.icon}</div>
+          <div>
+            <div class="feature-name">${f.name}</div>
+            <div class="feature-desc">${f.desc}</div>
+          </div>
+        </div>`;
+    });
+
+    const styleEl = document.getElementById("r-styles");
+    styleEl.innerHTML = "";
+    r.styles.forEach(s => {
+      styleEl.innerHTML += `
+        <div class="style-item">
+          <div class="style-name">✂ ${s.name}</div>
+          <div class="style-desc">${s.desc}</div>
+        </div>`;
+    });
+
+    const ngEl = document.getElementById("r-ng");
+    ngEl.innerHTML = "";
+    r.ng.forEach(n => {
+      ngEl.innerHTML += `<span class="ng-tag">✕ ${n}</span>`;
+    });
+
+    document.getElementById("r-message").textContent = r.message;
+
+    document.getElementById("input-section").style.display  = "none";
+    const rs = document.getElementById("result-section");
+    rs.classList.add("show");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  document.getElementById("retry-btn").addEventListener("click", () => {
+    document.getElementById("f1").value = "";
+    document.getElementById("f2").value = "";
+    document.getElementById("f3").value = "";
+    document.getElementById("f4").value = "";
+    document.getElementById("result-section").classList.remove("show");
+    document.getElementById("input-section").style.display = "block";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+</script>
+</body>
+</html>
